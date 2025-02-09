@@ -25,9 +25,7 @@
 
         .container {
             display: flex;
-            flex-wrap: wrap;
             justify-content: center;
-            gap: 20px;
             padding: 0 20px;
         }
 
@@ -69,11 +67,6 @@
             font-size: 1.1em;
         }
 
-        footer {
-            margin-top: 30px;
-            padding: 10px 0;
-        }
-
         /* Chocolate Day Theme */
         body.chocolate-day {
             background-color: #3e2723;
@@ -110,7 +103,13 @@
         <h1>Surprise for Spamudi</h1>
     </header>
     <div class="container">
-        <!-- Day cards will be dynamically inserted here -->
+        <div class="day-card" id="day-card">
+            <h2 id="day-name">Chocolate Day</h2>
+            <button id="unlock-button">Unlock Surprise</button>
+            <div id="content" class="content">
+                <p id="sweet-message">Sweet message for Chocolate Day!</p>
+            </div>
+        </div>
     </div>
     <footer>
         <p>&copy; 2025 Surprise for Spamudi</p>
@@ -122,65 +121,32 @@
 
             // Define the start dates for each day
             const themes = {
-                chocolateDay: { start: 45, end: 45, className: 'chocolate-day' },
-                teddyDay: { start: 46, end: 46, className: 'teddy-day' },
+                chocolateDay: { start: 45, end: 45, className: 'chocolate-day', message: 'Sweet message for Chocolate Day!' },
+                teddyDay: { start: 46, end: 46, className: 'teddy-day', message: 'Sweet message for Teddy Day!' },
                 // Add more themes here as needed
             };
 
             // Apply the theme based on the current day
             for (const theme in themes) {
-                const { start, end, className } = themes[theme];
+                const { start, end, className, message } = themes[theme];
                 if (dayOfYear >= start && dayOfYear <= end) {
                     document.body.classList.add(className);
+                    document.getElementById('day-name').textContent = theme.replace(/([A-Z])/g, ' $1').trim();
+                    document.getElementById('sweet-message').textContent = message;
                     break;
                 }
             }
 
-            // Generate day cards
-            const container = document.querySelector('.container');
-            const days = [
-                { date: '2025-02-09', name: 'Chocolate Day' },
-                { date: '2025-02-10', name: 'Teddy Day' },
-                // Add more days here as needed
-            ];
-
-            days.forEach(day => {
-                const dayCard = document.createElement('div');
-                dayCard.classList.add('day-card');
-                dayCard.id = day.date;
-
-                const dayTitle = document.createElement('h2');
-                dayTitle.textContent = day.name;
-                dayCard.appendChild(dayTitle);
-
-                const unlockButton = document.createElement('button');
-                unlockButton.textContent = 'Unlock Surprise';
-                unlockButton.addEventListener('click', () => unlockContent(day.date));
-                dayCard.appendChild(unlockButton);
-
-                const content = document.createElement('div');
-                content.classList.add('content');
-                content.textContent = `Surprise message for ${day.name}!`;
-                dayCard.appendChild(content);
-
-                container.appendChild(dayCard);
-            });
-
-            function unlockContent(date) {
-                if (date === today.toISOString().split('T')[0]) {
-                    const answer = prompt('Solve this riddle to unlock: I speak without a mouth and hear without ears. I have no body, but I come alive with wind. What am I?');
-                    if (answer.toLowerCase() === 'echo') {
-                        const dayCard = document.getElementById(date);
-                        dayCard.classList.remove('locked');
-                        dayCard.querySelector('.content').style.display = 'block';
-                        dayCard.querySelector('button').style.display = 'none';
-                    } else {
-                        alert('Incorrect answer. Please try again.');
-                    }
+            // Unlock content functionality
+            document.getElementById('unlock-button').addEventListener('click', () => {
+                const answer = prompt('Solve this riddle to unlock: I speak without a mouth and hear without ears. I have no body, but I come alive with wind. What am I?');
+                if (answer.toLowerCase() === 'echo') {
+                    document.getElementById('content').style.display = 'block';
+                    document.getElementById('unlock-button').style.display = 'none';
                 } else {
-                    alert('This content will be available on ' + new Date(date).toDateString() + '.');
+                    alert('Incorrect answer. Please try again.');
                 }
-            }
+            });
         });
     </script>
 </body>
