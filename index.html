@@ -3,27 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Valentine's Week Surprises</title>
+    <title>Surprise for Spamudi</title>
     <style>
+        /* Default Styles */
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #fff0f5;
-            color: #333;
-            text-align: center;
             margin: 0;
             padding: 0;
+            text-align: center;
         }
+
         header {
-            background-color: #ff69b4;
-            color: white;
             padding: 20px 0;
             margin-bottom: 30px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
+
         h1 {
             margin: 0;
             font-size: 2.5em;
         }
+
         .container {
             display: flex;
             flex-wrap: wrap;
@@ -31,29 +30,26 @@
             gap: 20px;
             padding: 0 20px;
         }
+
         .day-card {
-            background-color: white;
-            border: 2px solid #ff69b4;
+            border: 2px solid;
             border-radius: 10px;
             width: 250px;
             padding: 20px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             transition: transform 0.2s;
         }
+
         .day-card:hover {
             transform: scale(1.05);
         }
-        .day-card.locked {
-            opacity: 0.6;
-        }
+
         .day-card h2 {
             margin-top: 0;
             font-size: 1.5em;
-            color: #ff69b4;
         }
+
         .day-card button {
-            background-color: #ff69b4;
-            color: white;
             border: none;
             padding: 10px 20px;
             border-radius: 5px;
@@ -62,82 +58,132 @@
             margin-top: 10px;
             transition: background-color 0.2s;
         }
+
         .day-card button:hover {
-            background-color: #ff1493;
+            background-color: #3e2723;
         }
+
         .content {
             display: none;
             margin-top: 20px;
             font-size: 1.1em;
-            color: #555;
         }
+
         footer {
             margin-top: 30px;
             padding: 10px 0;
-            background-color: #ff69b4;
-            color: white;
+        }
+
+        /* Chocolate Day Theme */
+        body.chocolate-day {
+            background-color: #3e2723;
+            color: #fff3e0;
+        }
+
+        body.chocolate-day header {
+            background-color: #6d4c41;
+        }
+
+        body.chocolate-day .day-card {
+            background-color: #8d6e63;
+            border-color: #6d4c41;
+        }
+
+        /* Teddy Day Theme */
+        body.teddy-day {
+            background-color: #fce4ec;
+            color: #880e4f;
+        }
+
+        body.teddy-day header {
+            background-color: #f48fb1;
+        }
+
+        body.teddy-day .day-card {
+            background-color: #f8bbd0;
+            border-color: #f48fb1;
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>Valentine's Week Surprises</h1>
+        <h1>Surprise for Spamudi</h1>
     </header>
-    <div class="container" id="days-container"></div>
+    <div class="container">
+        <!-- Day cards will be dynamically inserted here -->
+    </div>
     <footer>
-        <p>&copy; 2025 Your Name. All rights reserved.</p>
+        <p>&copy; 2025 Surprise for Spamudi</p>
     </footer>
     <script>
-        const valentineDays = [
-            { date: '2025-02-09', name: 'Chocolate Day', message: 'Just like these chocolates, my life is sweeter with you in it.' },
-            { date: '2025-02-10', name: 'Teddy Day', message: 'Here’s a cuddly teddy to remind you of my warm hugs and love.' },
-            { date: '2025-02-11', name: 'Promise Day', message: 'I promise to stand by you through thick and thin, now and forever.' },
-            { date: '2025-02-12', name: 'Hug Day', message: 'Sending you a warm hug to let you know how much I care.' },
-            { date: '2025-02-13', name: 'Kiss Day', message: 'A kiss to seal our bond and cherish our love.' },
-            { date: '2025-02-14', name: 'Valentine\'s Day', message: 'Happy Valentine’s Day! My love for you grows stronger each day.' }
-        ];
+        document.addEventListener('DOMContentLoaded', () => {
+            const today = new Date();
+            const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
 
-        const today = new Date().toISOString().split('T')[0];
-        const daysContainer = document.getElementById('days-container');
+            // Define the start dates for each day
+            const themes = {
+                chocolateDay: { start: 45, end: 45, className: 'chocolate-day' },
+                teddyDay: { start: 46, end: 46, className: 'teddy-day' },
+                // Add more themes here as needed
+            };
 
-        valentineDays.forEach(day => {
-            const dayCard = document.createElement('div');
-            dayCard.className = 'day-card locked';
-            dayCard.id = day.date;
-
-            const dayTitle = document.createElement('h2');
-            dayTitle.textContent = day.name;
-            dayCard.appendChild(dayTitle);
-
-            const unlockButton = document.createElement('button');
-            unlockButton.textContent = 'Unlock';
-            unlockButton.onclick = () => unlockContent(day.date);
-            dayCard.appendChild(unlockButton);
-
-            const contentDiv = document.createElement('div');
-            contentDiv.className = 'content';
-            contentDiv.textContent = day.message;
-            dayCard.appendChild(contentDiv);
-
-            daysContainer.appendChild(dayCard);
-        });
-
-        function unlockContent(date) {
-            if (date === today) {
-                const answer = prompt('Solve this puzzle to unlock: What is 7 + 5?');
-                if (answer === '12') {
-                    const dayCard = document.getElementById(date);
-                    dayCard.classList.remove('locked');
-                    dayCard.querySelector('.content').style.display = 'block';
-                    dayCard.querySelector('button').style.display = 'none';
-                } else {
-                    alert('Incorrect answer. Please try again.');
+            // Apply the theme based on the current day
+            for (const theme in themes) {
+                const { start, end, className } = themes[theme];
+                if (dayOfYear >= start && dayOfYear <= end) {
+                    document.body.classList.add(className);
+                    break;
                 }
-            } else {
-                alert('This content will be available on ' + new Date(date).toDateString() + '.');
             }
-        }
+
+            // Generate day cards
+            const container = document.querySelector('.container');
+            const days = [
+                { date: '2025-02-09', name: 'Chocolate Day' },
+                { date: '2025-02-10', name: 'Teddy Day' },
+                // Add more days here as needed
+            ];
+
+            days.forEach(day => {
+                const dayCard = document.createElement('div');
+                dayCard.classList.add('day-card');
+                dayCard.id = day.date;
+
+                const dayTitle = document.createElement('h2');
+                dayTitle.textContent = day.name;
+                dayCard.appendChild(dayTitle);
+
+                const unlockButton = document.createElement('button');
+                unlockButton.textContent = 'Unlock Surprise';
+                unlockButton.addEventListener('click', () => unlockContent(day.date));
+                dayCard.appendChild(unlockButton);
+
+                const content = document.createElement('div');
+                content.classList.add('content');
+                content.textContent = `Surprise message for ${day.name}!`;
+                dayCard.appendChild(content);
+
+                container.appendChild(dayCard);
+            });
+
+            function unlockContent(date) {
+                if (date === today.toISOString().split('T')[0]) {
+                    const answer = prompt('Solve this riddle to unlock: I speak without a mouth and hear without ears. I have no body, but I come alive with wind. What am I?');
+                    if (answer.toLowerCase() === 'echo') {
+                        const dayCard = document.getElementById(date);
+                        dayCard.classList.remove('locked');
+                        dayCard.querySelector('.content').style.display = 'block';
+                        dayCard.querySelector('button').style.display = 'none';
+                    } else {
+                        alert('Incorrect answer. Please try again.');
+                    }
+                } else {
+                    alert('This content will be available on ' + new Date(date).toDateString() + '.');
+                }
+            }
+        });
     </script>
 </body>
 </html>
+
 
