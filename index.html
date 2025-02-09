@@ -3,140 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chocolate Memory Match Game</title>
+    <title>Valentine's Week Surprises</title>
     <style>
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f8f8f8;
-            font-family: Arial, sans-serif;
-        }
-        .game-board {
-            display: grid;
-            grid-template-columns: repeat(3, 100px);
-            grid-gap: 10px;
-        }
-        .card {
-            width: 100px;
-            height: 100px;
-            perspective: 1000px;
-        }
-        .card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
+            font-family: 'Arial', sans-serif;
+            background-color: #fff0f5;
+            color: #333;
             text-align: center;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #ff69b4;
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 0 20px;
+        }
+        .day-card {
+            background-color: white;
+            border: 2px solid #ff69b4;
+            border-radius: 10px;
+            width: 250px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .day-card:hover {
+            transform: scale(1.05);
+        }
+        .day-card.locked {
+            opacity: 0.6;
+        }
+        .day-card h2 {
+            margin-top: 0;
+            font-size: 1.5em;
+            color: #ff69b4;
+        }
+        .day-card button {
+            background-color: #ff69b4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
             cursor: pointer;
+            font-size: 1em;
+            margin-top: 10px;
+            transition: background-color 0.2s;
         }
-        .card.flipped .card-inner {
-            transform: rotateY(180deg);
+        .day-card button:hover {
+            background-color: #ff1493;
         }
-        .card-front, .card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 8px;
+        .content {
+            display: none;
+            margin-top: 20px;
+            font-size: 1.1em;
+            color: #555;
         }
-        .card-front {
-            background-color: #d3d3d3;
-        }
-        .card-back {
-            background-size: cover;
-            transform: rotateY(180deg);
+        footer {
+            margin-top: 30px;
+            padding: 10px 0;
+            background-color: #ff69b4;
+            color: white;
         }
     </style>
 </head>
 <body>
-    <div class="game-board" id="gameBoard">
-        <!-- Cards will be generated here -->
-    </div>
-
+    <header>
+        <h1>Valentine's Week Surprises</h1>
+    </header>
+    <div class="container" id="days-container"></div>
+    <footer>
+        <p>&copy; 2025 Your Name. All rights reserved.</p>
+    </footer>
     <script>
-        const images = [
-            'chocolate1.jpg',
-            'chocolate2.jpg',
-            'chocolate3.jpg',
-            'chocolate4.jpg',
-            'chocolate5.jpg',
-            'chocolate6.jpg'
+        const valentineDays = [
+            { date: '2025-02-09', name: 'Chocolate Day', message: 'Just like these chocolates, my life is sweeter with you in it.' },
+            { date: '2025-02-10', name: 'Teddy Day', message: 'Here’s a cuddly teddy to remind you of my warm hugs and love.' },
+            { date: '2025-02-11', name: 'Promise Day', message: 'I promise to stand by you through thick and thin, now and forever.' },
+            { date: '2025-02-12', name: 'Hug Day', message: 'Sending you a warm hug to let you know how much I care.' },
+            { date: '2025-02-13', name: 'Kiss Day', message: 'A kiss to seal our bond and cherish our love.' },
+            { date: '2025-02-14', name: 'Valentine\'s Day', message: 'Happy Valentine’s Day! My love for you grows stronger each day.' }
         ];
 
-        const gameBoard = document.getElementById('gameBoard');
-        let cardArray = [...images, ...images]; // Duplicate images for pairs
-        let hasFlippedCard = false;
-        let lockBoard = false;
-        let firstCard, secondCard;
+        const today = new Date().toISOString().split('T')[0];
+        const daysContainer = document.getElementById('days-container');
 
-        // Shuffle function
-        (function shuffle() {
-            cardArray.sort(() => 0.5 - Math.random());
-        })();
+        valentineDays.forEach(day => {
+            const dayCard = document.createElement('div');
+            dayCard.className = 'day-card locked';
+            dayCard.id = day.date;
 
-        // Create card elements
-        cardArray.forEach(img => {
-            const card = document.createElement('div');
-            card.classList.add('card');
-            card.innerHTML = `
-                <div class="card-inner">
-                    <div class="card-front"></div>
-                    <div class="card-back" style="background-image: url('${img}');"></div>
-                </div>
-            `;
-            gameBoard.appendChild(card);
-            card.addEventListener('click', flipCard);
-        });
+            const dayTitle = document.createElement('h2');
+            
 
-        function flipCard() {
-            if (lockBoard) return;
-            if (this === firstCard) return;
-
-            this.classList.add('flipped');
-
-            if (!hasFlippedCard) {
-                // First click
-                hasFlippedCard = true;
-                firstCard = this;
-                return;
-            }
-
-            // Second click
-            secondCard = this;
-            checkForMatch();
-        }
-
-        function checkForMatch() {
-            let isMatch = firstCard.innerHTML === secondCard.innerHTML;
-
-            isMatch ? disableCards() : unflipCards();
-        }
-
-        function disableCards() {
-            firstCard.removeEventListener('click', flipCard);
-            secondCard.removeEventListener('click', flipCard);
-
-            resetBoard();
-        }
-
-        function unflipCards() {
-            lockBoard = true;
-
-            setTimeout(() => {
-                firstCard.classList.remove('flipped');
-                secondCard.classList.remove('flipped');
-
-                resetBoard();
-            }, 1500);
-        }
-
-        function resetBoard() {
-            [hasFlippedCard, lockBoard] = [false, false];
-            [firstCard, secondCard] = [null, null];
-        }
-    </script>
-</body>
-</html>
