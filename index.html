@@ -106,5 +106,38 @@
             dayCard.id = day.date;
 
             const dayTitle = document.createElement('h2');
-            
+            dayTitle.textContent = day.name;
+            dayCard.appendChild(dayTitle);
+
+            const unlockButton = document.createElement('button');
+            unlockButton.textContent = 'Unlock';
+            unlockButton.onclick = () => unlockContent(day.date);
+            dayCard.appendChild(unlockButton);
+
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'content';
+            contentDiv.textContent = day.message;
+            dayCard.appendChild(contentDiv);
+
+            daysContainer.appendChild(dayCard);
+        });
+
+        function unlockContent(date) {
+            if (date === today) {
+                const answer = prompt('Solve this puzzle to unlock: What is 7 + 5?');
+                if (answer === '12') {
+                    const dayCard = document.getElementById(date);
+                    dayCard.classList.remove('locked');
+                    dayCard.querySelector('.content').style.display = 'block';
+                    dayCard.querySelector('button').style.display = 'none';
+                } else {
+                    alert('Incorrect answer. Please try again.');
+                }
+            } else {
+                alert('This content will be available on ' + new Date(date).toDateString() + '.');
+            }
+        }
+    </script>
+</body>
+</html>
 
